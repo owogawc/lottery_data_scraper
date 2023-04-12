@@ -1,3 +1,42 @@
+"""
+Scrapes the Louisiana lottery website for scratch-off ticket
+data and calculates the expected value for each game.
+
+Louisiana publishes the number of tickets printed and how many
+tickets are printed at each prize level.
+
+We can calculated the expected value of a game by summing
+the value of all the prizes and dividing that by the cost
+of all the tickets.
+
+The louisianalottery website has an "top prizes remaining" or an "index" page that 
+has links to every game that could still be profitable.
+Each individual game has a section for the "game rules" page and a prize table.
+We can use each individual game page to gather the important data, and 
+then run our calculations.
+
+Website that we'll be scraping:
+https://louisianalottery.com/scratch-offs/top-prizes-remaining
+
+Example usage:
+    python -m louisiana
+Or:
+    LOGLEVEL=DEBUG USE_CACHE=True python -m louisiana
+
+The following behavior is configurable through shell environment variables.
+
+Set LOGLEVEL to print useful debug info to console.
+LOGLEVEL=[DEBUG,INFO,WARNING,ERROR,CRITICAL]
+Defaults to WARNING.
+
+Set USE_CACHE to cache responses. This speeds up development
+and is nice to the servers we're hitting.
+USE_CACHE=[True]
+Defaults to False. Note: Setting this env variable to the string False
+will cause it to use cache because the string "False" evaluates to Truthy.
+Either set it to True or don't set it.
+"""
+
 import sys
 import traceback
 from copy import deepcopy
@@ -25,7 +64,7 @@ def parse_index(html):
     game_urls = list(map(lambda x: "https:" + x.attrs["href"], game_hrefs))
     return game_urls
 
-
+# TODO: convert pandas to beautiful soup
 def parse_game(url, html):
     soup = bs(html, "lxml")
     price = soup.select('div[id="scratch-off-prize-info"] td')[1].text.replace("$", "")
@@ -41,12 +80,11 @@ def parse_game(url, html):
     num_tx = int(grand_prize_odds * grand_prize_num)
     table = soup.find_all("table")[2]
     df = pd.read_html(str(table))[0]
-    df.iloc[:, 0] = df.iloc[:, 0].str.replace("$", "")  # noqa: E231
     df = df.replace("TICKET", price)
     prizes = [
         {
             "prize": prize,
-            "value": float(prize.replace(",", "")),
+            "value": float(prize.replace("$", "").replace(",", "")),
             "claimed": int(claimed),
             "available": int(total) - int(claimed),
         }
@@ -65,15 +103,15 @@ def parse_game(url, html):
 
 
 def main():
-    index_html = requests.get(INDEX_URL).text
+    index_html = fetch_html(INDEX_URL)
     game_urls = parse_index(index_html)
-    url_htmls = zip(game_urls, [requests.get(url).text for url in game_urls])
+    url_htmls = zip(game_urls, [fetch_html(url) for url in game_urls])
     games = []
     for url, html in url_htmls:
         try:
             game = parse_game(url, html)
         except Exception as e:
-            logger.warn("Unable to parse {}.\n{}".format(url, e))
+            logger.error("Unable to parse {}.\n{}".format(url, e))
             continue
         games.append(game)
     return games
