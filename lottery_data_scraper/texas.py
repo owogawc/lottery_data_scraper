@@ -86,7 +86,7 @@ def parse_game(url, html):
     table = soup.find("table")
     df = pd.read_html(str(table))[0]
     df = df.replace("---", 0)
-    df.iloc[:, 0] = df.iloc[:, 0].str.replace("$", "")  # noqa: E231
+    df.iloc[:, 0] = df.iloc[:, 0].str.replace("$", "") 
     prizes = []
     for prize, total, claimed in [list(r[1]) for r in df.iterrows()]:
         match = re.match(r"\$?([\d,]+).*wk.*", prize)
