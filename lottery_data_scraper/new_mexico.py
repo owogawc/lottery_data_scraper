@@ -5,15 +5,13 @@ from xmlrpc import client
 import traceback
 
 from bs4 import BeautifulSoup as bs
-import requests
+from lottery_data_scraper.schemas import GameSchema
+from lottery_data_scraper.util import fetch_html
+from lottery_data_scraper.util import save_image
 
-
-from lotto_site_parsers.util import save_image
-from lotto_site_parsers.util import save_game
 
 logger = logging.getLogger(__name__)
 
-DB_REPO_URI = os.environ.get("DB_REPO_URI", "http://localhost:8989")
 BASE_URL = "https://www.nmlottery.com"
 INDEX_URL = "https://www.nmlottery.com/games/scratchers"
 HEADERS = {
@@ -27,7 +25,7 @@ def get_games(site_url):
     parses page for game ids and game info
     returns and list of tuples with the id and game info for each game
     """
-    html = requests.get(site_url, headers=HEADERS).text
+    html = fetch_html(site_url)
     soup = bs(html, "html.parser")
 
     games_html = soup.find_all("div", class_="filter-block")
@@ -81,7 +79,8 @@ def process_game(game_info):
     num_of_tix = int(prizes[0]["odds"] * prizes[0]["total"])
 
     image_url = game_html.find("div", class_="scratcher-image").find_next("img")["src"]
-    image_location = save_image("nm", game_id, image_url, headers=HEADERS)
+    # FIXME: "image_urls" currently NoneType and not passing GameSchema
+    # image_location = save_image("nm", game_id, image_url, headers=HEADERS)
 
     game = {
         "name": name,
@@ -91,23 +90,26 @@ def process_game(game_info):
         "prizes": prizes,
         "num_tx_initial": num_of_tix,
         "state": "nm",
-        "image_urls": '["{}"]'.format(image_location),
+        # "image_urls": '["{}"]'.format(image_url),
+        "image_urls": f'["{{image_url}}"]',
     }
 
     return game
 
 
 def main():
+    final_games = []
     games = get_games(INDEX_URL)
     for game in games:
         try:
             game = process_game(game)
-            save_game(game)
+            final_games.append(game)
         except Exception as e:
             logger.warning(f"Unable to process game: {game[0]}-{game[1]}")
             logger.warning(e)
             traceback.print_exception(e)
 
-
 if __name__ == "__main__":
-    main()
+    games = main()
+    schema = GameSchema(many=True)
+    print(schema.dumps(games))

@@ -1,7 +1,12 @@
+import logging
 import base64
 import os
+import re
 import requests
 from tempfile import gettempdir
+
+
+logger = logging.getLogger(__name__)
 
 def fetch_html(url):
     """
@@ -44,3 +49,40 @@ def fetch_html(url):
             with open(filepath, "w+") as f:
                 f.write(html)
         return html
+
+
+def save_image(state, filename, url, headers=None):
+    """
+    Takes an abbreviates for a state, filename(game_id), url of image location, and headers
+
+    The function:
+    -parses the URL for the filetype
+    -establishes the image directory
+    -locates or create a filepath for images
+    -writes image info to file
+    """
+    headers = headers or {}
+    extension = re.search(r"\.([^\.\?]*)($|[^\.]+$)", url).group(1)
+    IMAGE_DIR = os.getenv(
+        "IMAGE_DIR",
+        os.path.realpath(os.path.join(os.getenv("HOME"), ".data/assets/images")),
+    )
+    IMAGE_DIR = f"{IMAGE_DIR}/{state}"
+    dirpath = IMAGE_DIR
+    if not os.path.exists(dirpath):
+        os.makedirs(dirpath)
+    filename = f"{filename}.{extension}"
+    filepath = os.path.realpath(os.path.join(dirpath, filename))
+    try:
+        r = requests.get(url, stream=True, headers=headers)
+    except Exception as e:
+        logger.warn("Unable to download {}.\n{}".format(url, e))
+        return None
+    if r.status_code == 200:
+        with open(filepath, "wb") as f:
+            for chunk in r:
+                f.write(chunk)
+    else:
+        logger.warn("Unable to download {}. {} - {}".format(url, r.status_code, r))
+        return None
+    return "{}/{}".format(state, filename)
