@@ -11,7 +11,7 @@ git clone https://github.com/owogawc/lottery_data_scraper
 cd lottery_data_scraper
 python3 -m venv ~/.virtualenvs/lottery_data_scraper
 . ~/.virtualenvs/lottery_data_scraper
-pip3 install -e .
+pip3 install -e '.[dev]'
 
 PY_LOG_LVL=DEBUG USE_CACHE=true python3 -m lottery_data_scraper.pennsylvania 
 ```
@@ -124,7 +124,7 @@ git clone https://github.com/owogawc/lottery_data_scraper
 cd lottery_data_scraper
 python3 -m venv ~/.virtualenvs/lottery_data_scraper
 . ~/.virtualenvs/lottery_data_scraper
-pip3 install -e .
+pip3 install -e '.[dev]'
 ```
 
 Then you should be able to run `make test` and see the tests pass.
