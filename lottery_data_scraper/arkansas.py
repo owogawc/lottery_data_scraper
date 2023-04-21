@@ -76,7 +76,6 @@ def parse_game(url, html):
 
 
 def main():
-    # just first two scrath off games in Arkansas on line 79
     urls = game_urls()
     url_htmls = zip(urls, [fetch_html(url) for url in urls])
     games = []
