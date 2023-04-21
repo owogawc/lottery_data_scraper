@@ -7,7 +7,7 @@
 FORCE:
 
 test: FORCE
-	python3 -m unittest discover tests
+	USE_CACHE=True python3 -m unittest discover tests
 
 style: FORCE
 	black .
