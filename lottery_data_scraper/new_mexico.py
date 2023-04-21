@@ -7,7 +7,6 @@ import traceback
 from bs4 import BeautifulSoup as bs
 from lottery_data_scraper.schemas import GameSchema
 from lottery_data_scraper.util import fetch_html
-from lottery_data_scraper.util import save_image
 
 
 logger = logging.getLogger(__name__)
@@ -79,8 +78,6 @@ def process_game(game_info):
     num_of_tix = int(prizes[0]["odds"] * prizes[0]["total"])
 
     image_url = game_html.find("div", class_="scratcher-image").find_next("img")["src"]
-    # FIXME: "image_urls" currently NoneType and not passing GameSchema
-    # image_location = save_image("nm", game_id, image_url, headers=HEADERS)
 
     game = {
         "name": name,
@@ -90,8 +87,7 @@ def process_game(game_info):
         "prizes": prizes,
         "num_tx_initial": num_of_tix,
         "state": "nm",
-        # "image_urls": '["{}"]'.format(image_url),
-        "image_urls": f'["{{image_url}}"]',
+        "image_urls": f'["{image_url}"]',
     }
 
     return game
@@ -108,6 +104,8 @@ def main():
             logger.warning(f"Unable to process game: {game[0]}-{game[1]}")
             logger.warning(e)
             traceback.print_exception(e)
+    return final_games
+
 
 if __name__ == "__main__":
     games = main()
