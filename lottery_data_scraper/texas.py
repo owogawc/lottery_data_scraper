@@ -138,3 +138,4 @@ if __name__ == "__main__":
     games = main()
     schema = GameSchema(many=True)
     print(schema.dumps(games))
+    
