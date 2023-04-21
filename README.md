@@ -1,5 +1,25 @@
 # Parsing of lottery websites
 
+- Parses scratchoff lottery ticket data from state websites.
+- Writes game and remaining prize info to stdout as json.
+- Writes errors to stderr.
+
+``` text
+➜  lottery_data_scraper git:(main) ✗ python3 -m lottery_data_scraper.louisiana 2> /tmp/louisiana.log | jq | head -n 50
+[
+  {
+    "state": "la",
+    "game_id": "1450",
+    "prizes": [
+      {
+        "prize": "$200,000",
+        "available": 2,
+        "value": 200000,
+        "claimed": 3
+      },
+# ...
+```
+
 ## Demo
 
 The following script should put you in a state where the last line will make a
@@ -21,6 +41,12 @@ formatted output by piping it to `jq` (and redirecting STDERR to /dev/null).
 
 ``` sh
 PY_LOG_LVL=DEBUG USE_CACHE=true python3 -m lottery_data_scraper.pennsylvania 2> /dev/null | jq
+```
+
+Or, if you want to capture error logs:
+
+``` sh
+python3 -m lottery_data_scraper.louisiana 2> /tmp/louisiana.log | jq
 ```
 
 ## Data models
