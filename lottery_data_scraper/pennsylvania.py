@@ -1,52 +1,10 @@
-"""
-Scrapes the Pennsylvania lottery website for scratch-off ticket
-data and calculates the expected value for each game.
-
-Pennsylvania publishes the number of tickets printed and how many
-tickets are printed at each prize level.
-
-We can calculated the expected value of a game by summing
-the value of all the prizes and dividing that by the cost
-of all the tickets.
-
-The palottery website has an "index" page that has links to every game.
-Each individual game has a link to a "game rules" page.
-We can start at the index and visit every game rules page, then we
-can find the html table on that page which has the detailed prize
-information and run our calculations.
-
-Website that we'll be scraping:
-https://www.palottery.state.pa.us/Scratch-Offs/Active-Games.aspx
-
-Example usage:
-    python -m pennsylvania
-Or:
-    LOGLEVEL=DEBUG USE_CACHE=True python -m pennsylvania
-
-The following behavior is configurable through shell environment variables.
-
-Set LOGLEVEL to print useful debug info to console.
-LOGLEVEL=[DEBUG,INFO,WARNING,ERROR,CRITICAL]
-Defaults to WARNING.
-
-Set USE_CACHE to cache responses. This speeds up development
-and is nice to the servers we're hitting.
-USE_CACHE=[True]
-Defaults to False. Note: Setting this env variable to the string False
-will cause it to use cache because the string "False" evaluates to Truthy.
-Either set it to True or don't set it.
-"""
-import base64
 import sys
 import traceback
 from copy import deepcopy
 import locale
 import logging
-import os
 import re
-from tempfile import gettempdir
 from bs4 import BeautifulSoup as bs
-import requests
 from lottery_data_scraper.schemas import GameSchema
 from lottery_data_scraper.util import fetch_html
 

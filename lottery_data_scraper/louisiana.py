@@ -1,51 +1,5 @@
-"""
-Scrapes the Louisiana lottery website for scratch-off ticket
-data and calculates the expected value for each game.
-
-Louisiana publishes the number of tickets printed and how many
-tickets are printed at each prize level.
-
-We can calculated the expected value of a game by summing
-the value of all the prizes and dividing that by the cost
-of all the tickets.
-
-The louisianalottery website has an "top prizes remaining" or an "index" page that 
-has links to every game that could still be profitable.
-Each individual game has a section for the "game rules" page and a prize table.
-We can use each individual game page to gather the important data, and 
-then run our calculations.
-
-Website that we'll be scraping:
-https://louisianalottery.com/scratch-offs/top-prizes-remaining
-
-Example usage:
-    python -m louisiana
-Or:
-    LOGLEVEL=DEBUG USE_CACHE=True python -m louisiana
-
-The following behavior is configurable through shell environment variables.
-
-Set LOGLEVEL to print useful debug info to console.
-LOGLEVEL=[DEBUG,INFO,WARNING,ERROR,CRITICAL]
-Defaults to WARNING.
-
-Set USE_CACHE to cache responses. This speeds up development
-and is nice to the servers we're hitting.
-USE_CACHE=[True]
-Defaults to False. Note: Setting this env variable to the string False
-will cause it to use cache because the string "False" evaluates to Truthy.
-Either set it to True or don't set it.
-"""
-
-import sys
-import traceback
-from copy import deepcopy
-import locale
 import logging
-import os
-import re
 from bs4 import BeautifulSoup as bs
-import requests
 import pandas as pd
 from lottery_data_scraper.schemas import GameSchema 
 from lottery_data_scraper.util import fetch_html
