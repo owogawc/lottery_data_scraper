@@ -3,6 +3,7 @@ import os
 import requests
 from tempfile import gettempdir
 
+
 def fetch_html(url):
     """
     Helper to fetch and cache html responses.

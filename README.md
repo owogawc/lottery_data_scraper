@@ -128,3 +128,11 @@ pip3 install -e .
 ```
 
 Then you should be able to run `make test` and see the tests pass.
+
+## Style
+
+> "Any color you like."
+
+From the root directory of the repository, run `python3 -m black lottery_data_scraper`.
+
+That will format your code according to [Black](https://pypi.org/project/black/).

@@ -1,7 +1,7 @@
 import logging
 from bs4 import BeautifulSoup as bs
 import pandas as pd
-from lottery_data_scraper.schemas import GameSchema 
+from lottery_data_scraper.schemas import GameSchema
 from lottery_data_scraper.util import fetch_html
 
 logger = logging.getLogger(__name__)
@@ -11,12 +11,14 @@ logger = logging.getLogger(__name__)
 BASE_URL = "http://www.louisianalottery.com"
 INDEX_URL = "https://louisianalottery.com/scratch-offs/top-prizes-remaining"
 
+
 def parse_index(html):
     soup = bs(html, "lxml")
     table = soup.find("table")
     game_hrefs = table.select("tr > td > a")
     game_urls = list(map(lambda x: "https:" + x.attrs["href"], game_hrefs))
     return game_urls
+
 
 # TODO: convert pandas to beautiful soup
 def parse_game(url, html):
@@ -28,7 +30,12 @@ def parse_game(url, html):
         'div[id="scratch-off-table-tier"] table > tbody > tr'
     )[0]
     grand_prize_odds = float(
-        grand_prize_row.select("td")[1].text.split(" in ")[1].replace(",", "",)
+        grand_prize_row.select("td")[1]
+        .text.split(" in ")[1]
+        .replace(
+            ",",
+            "",
+        )
     )
     grand_prize_num = int(grand_prize_row.select("td")[2].text)
     num_tx = int(grand_prize_odds * grand_prize_num)
