@@ -19,3 +19,4 @@ class TestLouisiana(unittest.TestCase):
         self.assertEqual(game["game_id"], "1450")
         self.assertEqual(game["prizes"][0]["prize"], "$200,000")
         self.assertEqual(game["prizes"][0]["value"], 200000.0)
+        
