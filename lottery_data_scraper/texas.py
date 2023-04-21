@@ -1,8 +1,8 @@
 """
-Scrapes the Louisiana lottery website for scratch-off ticket
+Scrapes the Texas lottery website for scratch-off ticket
 data and calculates the expected value for each game.
 
-Louisiana publishes the number of tickets printed and how many
+Texas publishes the number of tickets printed and how many
 tickets are printed at each prize level.
 
 We can calculated the expected value of a game by summing
