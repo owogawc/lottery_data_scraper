@@ -7,7 +7,6 @@ import html2text
 import requests
 from selenium import webdriver
 from bs4 import BeautifulSoup as bs
-from lotto_site_parsers.util import save_image
 
 logger = logging.getLogger(__name__)
 
@@ -97,21 +96,23 @@ def games(requests):
 
 def fetch_games():
     result_games = []
-    for game in games(s):
+    for game in games(s)[:2]:
+        print("fetch_games!", game)
         result_games.append(game)
     return result_games
 
 
-def save_game(game):
-    with client.ServerProxy(DB_REPO_URI) as c:
-        logger.debug("Saving game: {} - {}".format(game["game_id"], game["name"]))
-        c.persist([game])
+# def save_game(game):
+#     with client.ServerProxy(DB_REPO_URI) as c:
+#         logger.debug("Saving game: {} - {}".format(game["game_id"], game["name"]))
+#         c.persist([game])
 
 
 def main():
-    logger.info("Saving games to {}".format(DB_REPO_URI))
+    print('inside main')
+    # logger.info("Saving games to {}".format(DB_REPO_URI))
     for game in fetch_games():
-        save_game(game)
+        print("main!", game)
 
 
 if __name__ == "__main__":
