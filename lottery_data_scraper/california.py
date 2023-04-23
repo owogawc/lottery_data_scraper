@@ -1,6 +1,7 @@
 import locale
 import logging
 import json
+import operator
 import requests
 import html2text
 
@@ -37,13 +38,14 @@ def fetch_games():
                 "prize": locale.currency(prize_["value"], grouping=True)[:-3] # -3 to drop the cents
             }
             prizes.append(prize)
+        grand_prize = sorted(game_["prizeTiers"], key=operator.itemgetter("value"))[-1]
         game = {
             "game_id": game_["gameNumber"],
             "name": game_["name"],
             "desription": h.handle(game_["description"]),
             "image_urls": [game_["unScratchedImage"], game_["scratchedImage"]],
             "how_to_play": h.handle(game_["howToPlay"]),
-            "num_tx_initial": sum(prize["available"] + prize["claimed"] for prize in prizes),
+            "num_tx_initial": grand_prize["odds"] * grand_prize["totalNumberOfPrizes"],
             "price": game_["price"],
             "prizes": prizes,
             "state": "tx",
