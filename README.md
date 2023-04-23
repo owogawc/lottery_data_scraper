@@ -49,6 +49,35 @@ Or, if you want to capture error logs:
 python3 -m lottery_data_scraper.louisiana 2> /tmp/louisiana.log | jq
 ```
 
+Set `LOGLEVEL` to print useful debug info to console. Defaults to WARNING.
+
+`LOGLEVEL=[DEBUG,INFO,WARNING,ERROR,CRITICAL]`
+
+Set `USE_CACHE` to cache responses. This speeds up development
+and is nice to the servers we're hitting.
+
+`USE_CACHE=[True]`
+
+Defaults to False. Note: Setting this env variable to the string False will
+cause it to use cache because the string "False" evaluates to Truthy. Either set
+it to True or don't set it.
+
+# Methodology
+
+Most states publish the total number of tickets printed and how many tickets are
+printed at each prize level.
+
+We can calculated the expected value of a game by summing the value of all the
+prizes and dividing that by the cost of all the tickets.
+
+Most state websites have an "index" page that has links to every game. Each
+individual game has a link to a "game rules" page. We start at the index and
+visit every game rules page, then we can find the html table on that page which
+has the detailed prize information and run our calculations.
+
+For example:
+https://www.palottery.state.pa.us/Scratch-Offs/Active-Games.aspx
+
 ## Data models
 
 We're using [`marshmallow`](https://marshmallow.readthedocs.io/en/stable/index.html) to validate and serialize data.
