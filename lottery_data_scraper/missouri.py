@@ -113,6 +113,7 @@ def main():
     for url in game_urls:
         try:
             game = process_game(url)
+            print("game!", game)
             games.append(game)
         except Exception as e:
             logger.warning("Unable to process game {}.\n{}".format(url, e))
