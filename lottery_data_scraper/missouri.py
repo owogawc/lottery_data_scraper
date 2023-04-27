@@ -1,16 +1,15 @@
 import logging
-import os
 import re
-from xmlrpc import client
 
 from bs4 import BeautifulSoup as bs
 import requests
+from lottery_data_scraper.schemas import GameSchema
+from lottery_data_scraper.util import fetch_html
 
-from lotto_site_parsers.util import save_image
+# from lotto_site_parsers.util import save_image
 
 logger = logging.getLogger(__name__)
 
-DB_REPO_URI = os.environ.get("DB_REPO_URI", "http://localhost:8989")
 BASE_URL = "http://www.molottery.com"
 INDEX_URL = "http://www.molottery.com/scratchers.do"
 HEADERS = {
@@ -94,10 +93,12 @@ def process_game(url):
         "prizes": prizes,
     }
 
-    save_game(game)
+    # save_game(game)  do something different with game, we're not saving it anymore
+    return game
 
 
 def main():
+    games = []
     try:
         index_response = requests.get(INDEX_URL, headers=HEADERS)
         index_soup = bs(index_response.text, "html.parser")
@@ -111,16 +112,15 @@ def main():
 
     for url in game_urls:
         try:
-            process_game(url)
+            game = process_game(url)
+            games.append(game)
         except Exception as e:
             logger.warning("Unable to process game {}.\n{}".format(url, e))
-
-
-def save_game(game):
-    with client.ServerProxy(DB_REPO_URI) as c:
-        logger.debug("Saving game: {} - {}".format(game["game_id"], game["name"]))
-        c.persist([game])
+    
+    return games
 
 
 if __name__ == "__main__":
-    main()
+    games = main()
+    schema = GameSchema(many=True)
+    print(schema.dumps(games))
