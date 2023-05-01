@@ -47,7 +47,7 @@ def fetch_games():
             "desription": h.handle(game_["description"]),
             "image_urls": [game_["unScratchedImage"], game_["scratchedImage"]],
             "how_to_play": h.handle(game_["howToPlay"]),
-            "num_tx_initial": grand_prize["odds"] * grand_prize["totalNumberOfPrizes"],
+            "num_tx_initial": num_tx_initial(game_),
             "price": game_["price"],
             "prizes": prizes,
             "state": "tx",
