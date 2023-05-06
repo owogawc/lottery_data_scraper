@@ -8,7 +8,7 @@ from xmlrpc import client
 from bs4 import BeautifulSoup as bs
 import html2text
 import requests
-from lottery_data_scraper.schemas import GameSchema 
+from lottery_data_scraper.schemas import GameSchema
 from lottery_data_scraper.util import fetch_html
 
 logger = logging.getLogger(__name__)
@@ -28,7 +28,6 @@ headers = {
 }
 
 
-
 def get_games_urls(url):
     html = fetch_html(url)
     soup = bs(html, "lxml")
@@ -36,6 +35,7 @@ def get_games_urls(url):
     game_hrefs = table.select("tr > td > a")
     game_urls = list(map(lambda x: BASE + x.attrs["href"], game_hrefs))
     return game_urls
+
 
 def parse_game(game_url):
     # Each game page has two tables
@@ -46,22 +46,23 @@ def parse_game(game_url):
     game_soup = bs(game_html, "lxml")
 
     name = game_soup.find("h2").text
-    game_id = re.match(r"GAME #(\d*)",game_soup.find(class_="heading-sub-info").text).group(1)
+    game_id = re.match(
+        r"GAME #(\d*)", game_soup.find(class_="heading-sub-info").text
+    ).group(1)
 
-    #soup for table 1
+    # soup for table 1
     table_one = game_soup.find(class_="img-detail-block")
 
     price = int(re.search(r"Ticket Price:\$(\d*)", table_one.text).group(1))
-    
-    num_tx_str = re.search(r"Total # of Tickets:([\d*][,\d*]+)", table_one.text).group(1)
+
+    num_tx_str = re.search(r"Total # of Tickets:([\d*][,\d*]+)", table_one.text).group(
+        1
+    )
     num_tx_initial = int(num_tx_str.replace(",", ""))
 
-
-    #soup for table 2
+    # soup for table 2
     table_two = game_soup.find(class_="unclaimed-prize-wrap")
-    prize_rows = (
-     table_two.find("tbody").find_all("tr")
-    )
+    prize_rows = table_two.find("tbody").find_all("tr")
     prizes = []
     for row in prize_rows:
         prize, total, available = [r.text for r in row.find_all("td")]
@@ -86,7 +87,7 @@ def parse_game(game_url):
         )
 
     how_to_play_soup = game_soup.find(class_="play-text-wrap")
-    #remove heading and button tags
+    # remove heading and button tags
     how_to_play_soup.h3.extract()
     how_to_play_soup.a.extract()
 
@@ -104,9 +105,10 @@ def parse_game(game_url):
         "prizes": prizes,
         "num_tx_initial": num_tx_initial,
         "how_to_play": how_to_play,
-        "image_urls": image_urls
+        "image_urls": image_urls,
     }
     return game
+
 
 def main():
     games_urls = get_games_urls(INDEX)
@@ -116,7 +118,8 @@ def main():
             game = parse_game(game)
         except Exception as e:
             logger.error("Unable to parse game {}.\n{}".format(game, e))
-    games.append(game)
+            continue
+        games.append(game)
     return games
 
 
@@ -124,4 +127,3 @@ if __name__ == "__main__":
     games = main()
     schema = GameSchema(many=True)
     print(schema.dumps(games))
-
