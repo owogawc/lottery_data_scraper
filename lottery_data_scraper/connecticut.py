@@ -1,13 +1,8 @@
 import logging
-import os
 import re
-import sys
-import traceback
-from xmlrpc import client
 
 from bs4 import BeautifulSoup as bs
 import html2text
-import requests
 from lottery_data_scraper.schemas import GameSchema
 from lottery_data_scraper.util import fetch_html
 
