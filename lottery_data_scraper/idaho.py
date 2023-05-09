@@ -90,7 +90,7 @@ def parse_game(url):
     game = {
         "name": name,
         "url": url,
-        "image_urls": f"[{image_url}]",
+        "image_urls": [image_url],
         "state": "id",
         "game_id": game_id,
         "how_to_play": how_to_play,
