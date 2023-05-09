@@ -100,7 +100,7 @@ def parse_game(game_url):
         "prizes": prizes,
         "num_tx_initial": num_tx_initial,
         "how_to_play": how_to_play,
-        "image_urls": image_urls,
+        "image_urls": [image_urls],
     }
     return game
 
