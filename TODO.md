@@ -17,7 +17,7 @@
   - [ ] Michigan
   - [ ] Mississippi
   - [ ] Nebraska
-  - [ ] New Jersey
+  - [x] New Jersey
 
 - [ ] Add Tests.
   - [ ] Maryland does not test a specific game
