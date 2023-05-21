@@ -83,6 +83,9 @@ def get_api_game_list(api_url):
 
 # did not work with firefox
 def get_game_list(site_url):
+    '''
+    Using Selenium to run JavaScript
+    '''
     options = webdriver.chrome.options.Options()
     options.headless = True
     driver = webdriver.Chrome(options=options)
@@ -146,7 +149,7 @@ def process_game(game_info):
     """
     Takes game info [game_ID, game_url, game_soup]
 
-    retrieves api info
+    Retrieves api info
         {
             "DateAvailable": "Date_Time_Format",
             "GameNameTitle": "Game's Name",
@@ -228,7 +231,7 @@ def main():
 
     games = []
 
-    for game in games_list[:1]:
+    for game in games_list:
         try:
             game = process_game(game)
         except Exception as e:
