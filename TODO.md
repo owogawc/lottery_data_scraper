@@ -12,7 +12,7 @@
   - [x] New Mexico
   - [x] Texas
   - [x] Pennsylvania
-  - [ ] Oregon
+  - [x] Oregon
   - [ ] Arizona
   - [ ] Michigan
   - [ ] Mississippi
