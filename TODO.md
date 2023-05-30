@@ -2,7 +2,7 @@
 
 - [ ] Add more states.
   - [x] Florida
-  - [ ] New York
+  - [x] New York
   - [x] California
   - [x] Texas
   - [ ] Georgia
