@@ -1,5 +1,4 @@
 import unittest
-import requests
 
 from lottery_data_scraper import louisiana
 from lottery_data_scraper import schemas
@@ -19,4 +18,3 @@ class TestLouisiana(unittest.TestCase):
         self.assertEqual(game["game_id"], "1450")
         self.assertEqual(game["prizes"][0]["prize"], "$200,000")
         self.assertEqual(game["prizes"][0]["value"], 200000.0)
-        

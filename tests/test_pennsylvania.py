@@ -1,5 +1,4 @@
 import unittest
-import requests
 
 from lottery_data_scraper import pennsylvania
 from lottery_data_scraper import schemas

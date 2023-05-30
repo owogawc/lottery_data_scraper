@@ -25,4 +25,9 @@ setup(
         "xvfbwrapper==0.2.9",
         "table_ocr==0.2.5",
     ],
+    extras_require={
+        "dev": [
+            "black",
+        ]
+    }
 )
