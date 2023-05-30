@@ -111,7 +111,7 @@ def main():
     game_info = get_games(API_URL)
     games = []
 
-    for game in game_info[:1]:
+    for game in game_info:
         try:
             processed_game = process_game(game)
         except Exception as e:
