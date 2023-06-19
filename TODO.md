@@ -6,7 +6,7 @@
   - [x] California
   - [x] Texas
   - [ ] Georgia
-  - [ ] Massachusetts
+  - [x] Massachusetts
   - [ ] Ohio
   - [x] Pennsylvania
   - [ ] Michigan
