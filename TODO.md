@@ -7,7 +7,7 @@
   - [x] Texas
   - [ ] Georgia
   - [x] Massachusetts
-  - [ ] Ohio
+  - [-] Ohio (missing info)
   - [x] Pennsylvania
   - [ ] Michigan
   - [x] Maryland
