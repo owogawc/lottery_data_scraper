@@ -11,7 +11,7 @@
   - [x] Pennsylvania
   - [ ] Michigan
   - [x] Maryland
-  - [ ] North Carolina
+  - [x] North Carolina
   - [x] New Jersey
   - [ ] Illinois
   - [ ] Virginia
