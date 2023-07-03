@@ -44,15 +44,16 @@ def process_game(game_url):
 
 
     """
-    html = requests.get(f"{BASE_URL}{game_url}").text
+    game_url = f"{BASE_URL}{game_url}"
+
+    html = requests.get(game_url).text
     soup = bs(html, "html.parser")
 
-    print("game_url==", game_url)
     game_url_split = game_url.split("/")
     
-    game_id = game_url_split[2]
+    game_id = game_url_split[-2]
 
-    name = game_url_split[3]
+    name = game_url_split[-1].replace("-", " ").capitalize()
 
     how_to_play = soup.find("h3").find_next("p").text
 
@@ -85,6 +86,7 @@ def process_game(game_url):
         "name": name,
         "game_id": game_id,
         "how_to_play": how_to_play,
+        "url": game_url,
         "price": price,
         "prizes": prizes,
         "image_urls": [image_url],
@@ -100,8 +102,8 @@ def main():
     for game_url in game_urls:
         try:
             game = process_game(game_url)
+            print(f"{game_url} succeeded")
         except Exception as e:
-            logger.warning("temp message")
             logger.warning(e)
             traceback.print_exception(e)
             logger.warning(f"Unable to process game:{game_url}")
