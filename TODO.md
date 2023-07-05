@@ -1,5 +1,9 @@
 # TODO
 
+# x - Done
+# i - Issues with site
+# p - in progress
+
 - [ ] Add more states.
   - [x] Florida
   - [x] New York
@@ -7,13 +11,13 @@
   - [x] Texas
   - [ ] Georgia
   - [x] Massachusetts
-  - [-] Ohio (missing info)
+  - [i] Ohio (missing info)
   - [x] Pennsylvania
   - [ ] Michigan
   - [x] Maryland
   - [x] North Carolina
   - [x] New Jersey
-  - [ ] Illinois
+  - [p] Illinois
   - [ ] Virginia
   - [ ] South Carolina
   - [ ] Tennessee
