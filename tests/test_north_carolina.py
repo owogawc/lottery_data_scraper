@@ -15,3 +15,4 @@ class TestNorthCarolina(unittest.TestCase):
         self.assertEqual(game["prizes"][0]["prize"], "$4,000,000")
         self.assertEqual(game["prizes"][0]["value"], 4000000)
         self.assertEqual(game["num_tx_initial"], 11899738)
+        
